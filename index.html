@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #00c6ff;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #007acc;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #cityName {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    #temperature {
+      font-size: 36px;
+      color: #00c6ff;
+      margin-bottom: 5px;
+    }
+
+    #description {
+      font-size: 18px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1 class="title">Weather App</h1>
+      <input type="text" id="cityInput" placeholder="Enter city name" />
+      <button onclick="getWeather()">Get Weather</button>
+      <div id="weatherResult" class="result hidden">
+        <h2 id="cityName"></h2>
+        <p id="temperature"></p>
+        <p id="description"></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('cityInput').value;
+      const apiKey = '72a3210a07b1eba44e026a9caea1f1a7'; // Replace with your OpenWeatherMap API key
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+      if (!city) {
+        alert('Please enter a city name');
+        return;
+      }
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('City not found');
+
+        const data = await response.json();
+        document.getElementById('cityName').textContent = data.name;
+        document.getElementById('temperature').textContent = `${data.main.temp}°C`;
+        document.getElementById('description').textContent = data.weather[0].description;
+
+        document.getElementById('weatherResult').classList.remove('hidden');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  </script>
+</body>
+</html>
